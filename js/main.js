@@ -238,19 +238,18 @@ function updateActiveNavigation() {
 // Blog loading function
 function loadBlogPosts() {
     const blogContainer = document.getElementById('blog-posts');
-    
-    // Check if blog container exists
     if (!blogContainer) {
         console.log('Blog container not found');
         return;
     }
 
-    const feedUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent("https://cybernewsx24.blogspot.com/feeds/posts/default?alt=json");
+    // Replace with your actual Blog ID
+    const blogId = '7388099076371396824';
     
-    // Clear any existing content
+    // Clear existing content
     blogContainer.innerHTML = '';
-    
-    // Add loading indicator
+
+    // Show loading state
     const loadingElement = document.createElement('div');
     loadingElement.className = 'loading';
     loadingElement.innerHTML = `
@@ -258,92 +257,264 @@ function loadBlogPosts() {
         <p>Loading blog posts...</p>
     `;
     blogContainer.appendChild(loadingElement);
+
+    // Since JSON API is discontinued, we need to fetch XML and parse it
+    fetchBlogFeedXML(blogId, blogContainer);
+}
+
+function fetchBlogFeedXML(blogId, blogContainer) {
+    // The feed URL now returns XML (Atom feed) only
+    const feedUrl = `https://www.blogger.com/feeds/${blogId}/posts/default?max-results=3`;
     
-    fetch(feedUrl)
+    // Try CORS proxy methods since direct fetch will likely fail due to CORS
+    const proxies = [
+        `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(feedUrl)}`,
+        `https://cors-anywhere.herokuapp.com/${feedUrl}`,
+        `https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`
+    ];
+    
+    tryXMLProxiesSequentially(proxies, 0, blogContainer);
+}
+
+function tryXMLProxiesSequentially(proxies, index, blogContainer) {
+    if (index >= proxies.length) {
+        // If all proxies fail, try the JSONP method (might still work for some feeds)
+        tryJSONPFallback(blogContainer);
+        return;
+    }
+    
+    fetch(proxies[index])
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json();
+            return response.text(); // Get as text since it's XML
         })
-        .then(data => {
-            console.log('Blog data received:', data);
-            
-            let parsed;
+        .then(xmlText => {
+            // Handle different proxy response formats
+            let actualXML = xmlText;
             try {
-                parsed = JSON.parse(data.contents);
-            } catch (parseError) {
-                throw new Error('Failed to parse blog data');
+                const jsonResponse = JSON.parse(xmlText);
+                if (jsonResponse.contents) {
+                    actualXML = jsonResponse.contents;
+                }
+            } catch (e) {
+                // It's already XML text, use as is
             }
             
-            const posts = parsed.feed?.entry;
-            
-            // Clear loading state
-            blogContainer.innerHTML = '';
-            
-            if (!posts || posts.length === 0) {
-                blogContainer.innerHTML = `
-                    <div class="error-message">
-                        <i class="fas fa-info-circle"></i>
-                        <p>No blog posts found.</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            const numberOfPosts = Math.min(posts.length, 3);
-            
-            posts.slice(0, numberOfPosts).forEach(post => {
-                const title = post.title?.$t || 'Untitled';
-                const link = post.link?.find(l => l.rel === "alternate")?.href || '#';
-                const content = post.content?.$t || post.summary?.$t || "";
-                const snippet = content.replace(/<[^>]+>/g, '').substring(0, 120) + '...';
-                
-                // Extract published date
-                const published = new Date(post.published?.$t);
-                const formattedDate = published.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                });
-                
-                const postElement = document.createElement('div');
-                postElement.classList.add('blog-post');
-                
-                postElement.innerHTML = `
-                    <div class="post-image">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <div class="post-content">
-                        <h4>${title}</h4>
-                        <p>${snippet}</p>
-                        <div class="post-meta">
-                            <span class="date">${formattedDate}</span>
-                            <a href="${link}" target="_blank" class="read-more">
-                                Read more <i class="fas fa-arrow-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                `;
-                
-                blogContainer.appendChild(postElement);
-            });
+            parseXMLFeed(actualXML, blogContainer);
         })
         .catch(error => {
-            console.error("Error loading blog posts:", error);
-            blogContainer.innerHTML = `
-                <div class="error-message">
-                    <i class="fas fa-exclamation-triangle" style="color: #ff6b6b; font-size: 2.5rem; margin-bottom: 20px;"></i>
-                    <h3>Failed to load blog posts</h3>
-                    <p>Error: ${error.message}</p>
-                    <p>Please check your connection and try again later</p>
-                    <button onclick="loadBlogPosts()" class="retry-btn">
-                        <i class="fas fa-redo"></i> Retry
-                    </button>
-                </div>
-            `;
+            console.log(`Proxy ${index + 1} failed:`, error);
+            tryXMLProxiesSequentially(proxies, index + 1, blogContainer);
         });
 }
+
+function parseXMLFeed(xmlText, blogContainer) {
+    try {
+        // Parse XML using DOMParser
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+        
+        // Check for parsing errors
+        const parseError = xmlDoc.querySelector('parsererror');
+        if (parseError) {
+            throw new Error('XML parsing failed: ' + parseError.textContent);
+        }
+        
+        // Get all entry elements (blog posts)
+        const entries = xmlDoc.querySelectorAll('entry');
+        
+        blogContainer.innerHTML = '';
+        
+        if (entries.length === 0) {
+            blogContainer.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-info-circle"></i>
+                    <p>No blog posts found.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Process each entry
+        entries.forEach(entry => {
+            const title = getTextContent(entry, 'title') || 'Untitled';
+            
+            // Get the alternate link (the blog post URL)
+            const links = entry.querySelectorAll('link');
+            let postUrl = '#';
+            for (let link of links) {
+                if (link.getAttribute('rel') === 'alternate' && link.getAttribute('type') === 'text/html') {
+                    postUrl = link.getAttribute('href');
+                    break;
+                }
+            }
+            
+            // Get content (try content first, then summary)
+            let content = getTextContent(entry, 'content') || getTextContent(entry, 'summary') || '';
+            const snippet = content.replace(/<[^>]+>/g, '').substring(0, 120) + '...';
+            
+            // Get published date
+            const publishedText = getTextContent(entry, 'published');
+            const published = publishedText ? new Date(publishedText) : new Date();
+            const formattedDate = published.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+            
+            // Extract image from content if available
+            const imageMatch = content.match(/<img[^>]+src=["']([^"'>]+)["']/i);
+            const imageUrl = imageMatch ? imageMatch[1] : null;
+            
+            // Create post element
+            const postElement = document.createElement('div');
+            postElement.classList.add('blog-post');
+            postElement.innerHTML = `
+                <div class="post-image">
+                    ${imageUrl ? 
+                        `<img src="${imageUrl}" alt="${title}" loading="lazy" onerror="this.parentElement.innerHTML='<i class=\\"fas fa-file-alt\\"></i>'">` : 
+                        '<i class="fas fa-file-alt"></i>'
+                    }
+                </div>
+                <div class="post-content">
+                    <h4>${title}</h4>
+                    <p>${snippet}</p>
+                    <div class="post-meta">
+                        <span class="date">${formattedDate}</span>
+                        <a href="${postUrl}" target="_blank" class="read-more">
+                            Read more <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            blogContainer.appendChild(postElement);
+        });
+        
+    } catch (error) {
+        console.error('Error parsing XML:', error);
+        showError(blogContainer, 'Failed to parse blog feed: ' + error.message);
+    }
+}
+
+function getTextContent(parentElement, tagName) {
+    const element = parentElement.querySelector(tagName);
+    return element ? element.textContent : '';
+}
+
+// Fallback JSONP method (might still work for some configurations)
+function tryJSONPFallback(blogContainer) {
+    const blogId = '7388099076371396824';
+    const script = document.createElement('script');
+    const callbackName = 'blogCallback_' + Date.now();
+    
+    // Create global callback function
+    window[callbackName] = function(data) {
+        processBlogDataJSON(data, blogContainer);
+        // Cleanup
+        document.head.removeChild(script);
+        delete window[callbackName];
+    };
+    
+    // Try JSONP (might still work)
+    const jsonpUrl = `https://www.blogger.com/feeds/${blogId}/posts/default?alt=json-in-script&callback=${callbackName}&max-results=3`;
+    
+    script.src = jsonpUrl;
+    script.onerror = () => {
+        console.log('JSONP fallback also failed');
+        delete window[callbackName];
+        document.head.removeChild(script);
+        showError(blogContainer, 'All methods failed. The blog feed may not be accessible due to CORS restrictions.');
+    };
+    
+    document.head.appendChild(script);
+}
+
+// Handle JSON data if JSONP still works
+function processBlogDataJSON(parsed, blogContainer) {
+    const posts = parsed.feed?.entry;
+    blogContainer.innerHTML = '';
+
+    if (!posts || posts.length === 0) {
+        blogContainer.innerHTML = `
+            <div class="error-message">
+                <i class="fas fa-info-circle"></i>
+                <p>No blog posts found.</p>
+            </div>
+        `;
+        return;
+    }
+
+    posts.forEach(post => {
+        const title = post.title?.$t || 'Untitled';
+        const link = post.link?.find(l => l.rel === "alternate")?.href || '#';
+        const content = post.content?.$t || post.summary?.$t || "";
+        const snippet = content.replace(/<[^>]+>/g, '').substring(0, 120) + '...';
+        const published = new Date(post.published?.$t);
+        const formattedDate = published.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+
+        const imageMatch = content.match(/<img[^>]+src="([^">]+)"/);
+        const imageUrl = imageMatch ? imageMatch[1] : null;
+
+        const postElement = document.createElement('div');
+        postElement.classList.add('blog-post');
+        postElement.innerHTML = `
+            <div class="post-image">
+                ${imageUrl ? 
+                    `<img src="${imageUrl}" alt="${title}" loading="lazy">` : 
+                    '<i class="fas fa-file-alt"></i>'
+                }
+            </div>
+            <div class="post-content">
+                <h4>${title}</h4>
+                <p>${snippet}</p>
+                <div class="post-meta">
+                    <span class="date">${formattedDate}</span>
+                    <a href="${link}" target="_blank" class="read-more">
+                        Read more <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        `;
+
+        blogContainer.appendChild(postElement);
+    });
+}
+
+function showError(blogContainer, message) {
+    blogContainer.innerHTML = `
+        <div class="error-message">
+            <i class="fas fa-exclamation-triangle" style="color: #ff6b6b; font-size: 2.5rem; margin-bottom: 20px;"></i>
+            <h3>Failed to load blog posts</h3>
+            <p>${message}</p>
+            <button onclick="loadBlogPosts()" class="retry-btn">
+                <i class="fas fa-redo"></i> Retry
+            </button>
+        </div>
+    `;
+}
+
+// Server-side solution (recommended for production)
+function loadBlogPostsServerSide() {
+    fetch('/api/blog-posts')
+        .then(response => response.json())
+        .then(xmlText => {
+            const blogContainer = document.getElementById('blog-posts');
+            parseXMLFeed(xmlText, blogContainer);
+        })
+        .catch(error => {
+            console.error('Server-side fetch failed:', error);
+            const blogContainer = document.getElementById('blog-posts');
+            showError(blogContainer, 'Server error: ' + error.message);
+        });
+}
+
 
 // Contact form handler with EmailJS
 function handleContactForm() {
