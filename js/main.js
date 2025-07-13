@@ -238,108 +238,67 @@ function updateActiveNavigation() {
 // Blog loading function
 function loadBlogPosts() {
     const blogContainer = document.getElementById('blog-posts');
-    
-    // Check if blog container exists
-    if (!blogContainer) {
-        console.log('Blog container not found');
-        return;
-    }
+    if (!blogContainer) return;
 
-    const feedUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent("https://cybernewsx24.blogspot.com/feeds/posts/default?alt=json");
-    
-    // Clear any existing content
-    blogContainer.innerHTML = '';
-    
-    // Add loading indicator
-    const loadingElement = document.createElement('div');
-    loadingElement.className = 'loading';
-    loadingElement.innerHTML = `
-        <i class="fas fa-circle-notch fa-spin"></i>
-        <p>Loading blog posts...</p>
+    const feedUrl = "https://api.rss2json.com/v1/api.json?rss_url=https://cybernewsx24.blogspot.com/feeds/posts/default";
+
+    blogContainer.innerHTML = `
+        <div class="loading">
+            <i class="fas fa-circle-notch fa-spin"></i>
+            <p>Loading blog posts...</p>
+        </div>
     `;
-    blogContainer.appendChild(loadingElement);
-    
+
     fetch(feedUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
+        .then(res => {
+            if (!res.ok) throw new Error("Network response was not ok");
+            return res.json();
         })
         .then(data => {
-            console.log('Blog data received:', data);
-            
-            let parsed;
-            try {
-                parsed = JSON.parse(data.contents);
-            } catch (parseError) {
-                throw new Error('Failed to parse blog data');
-            }
-            
-            const posts = parsed.feed?.entry;
-            
-            // Clear loading state
-            blogContainer.innerHTML = '';
-            
+            blogContainer.innerHTML = "";
+
+            const posts = data.items?.slice(0, 3);
             if (!posts || posts.length === 0) {
-                blogContainer.innerHTML = `
-                    <div class="error-message">
-                        <i class="fas fa-info-circle"></i>
-                        <p>No blog posts found.</p>
-                    </div>
-                `;
+                blogContainer.innerHTML = `<p>No blog posts found.</p>`;
                 return;
             }
-            
-            const numberOfPosts = Math.min(posts.length, 3);
-            
-            posts.slice(0, numberOfPosts).forEach(post => {
-                const title = post.title?.$t || 'Untitled';
-                const link = post.link?.find(l => l.rel === "alternate")?.href || '#';
-                const content = post.content?.$t || post.summary?.$t || "";
-                const snippet = content.replace(/<[^>]+>/g, '').substring(0, 120) + '...';
-                
-                // Extract published date
-                const published = new Date(post.published?.$t);
-                const formattedDate = published.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
+
+            posts.forEach(post => {
+                const snippet = post.content.replace(/<[^>]*>/g, '').substring(0, 120) + "...";
+                const date = new Date(post.pubDate);
+                const formattedDate = date.toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric"
                 });
-                
-                const postElement = document.createElement('div');
-                postElement.classList.add('blog-post');
-                
+
+                const postElement = document.createElement("div");
+                postElement.className = "blog-post";
                 postElement.innerHTML = `
                     <div class="post-image">
                         <i class="fas fa-lock"></i>
                     </div>
                     <div class="post-content">
-                        <h4>${title}</h4>
+                        <h4>${post.title}</h4>
                         <p>${snippet}</p>
                         <div class="post-meta">
                             <span class="date">${formattedDate}</span>
-                            <a href="${link}" target="_blank" class="read-more">
+                            <a href="${post.link}" target="_blank" class="read-more">
                                 Read more <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>
                     </div>
                 `;
-                
                 blogContainer.appendChild(postElement);
             });
         })
         .catch(error => {
-            console.error("Error loading blog posts:", error);
+            console.error("Blog load failed:", error);
             blogContainer.innerHTML = `
                 <div class="error-message">
-                    <i class="fas fa-exclamation-triangle" style="color: #ff6b6b; font-size: 2.5rem; margin-bottom: 20px;"></i>
+                    <i class="fas fa-exclamation-triangle" style="color: red;"></i>
                     <h3>Failed to load blog posts</h3>
-                    <p>Error: ${error.message}</p>
-                    <p>Please check your connection and try again later</p>
-                    <button onclick="loadBlogPosts()" class="retry-btn">
-                        <i class="fas fa-redo"></i> Retry
-                    </button>
+                    <p>${error.message}</p>
                 </div>
             `;
         });
