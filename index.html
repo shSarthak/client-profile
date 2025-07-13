@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -48,7 +49,7 @@
             <a href="https://www.linkedin.com/in/nitin-saraswat-93b541260" target="_blank" rel="noopener noreferrer">
                 <i class="fab fa-linkedin"></i>
             </a>
-            <a href="https://api.whatsapp.com/message/PGUJPWTWTHKVH1?autoload=1&app_absent=0" target="_blank" rel="noopener noreferrer" class="whatsapp">
+            <a href="javascript:void(0);" onclick="openWhatsApp()" class="whatsapp">
                 <i class="fab fa-whatsapp"></i>
             </a>
         </div>
@@ -67,6 +68,11 @@
 
     <!-- Mobile Toggle Button -->
     <i class="header-toggle fas fa-bars"></i>
+
+    <!-- WhatsApp Floating Button -->
+    <div class="whatsapp-float" onclick="openWhatsApp()">
+        <i class="fab fa-whatsapp"></i>
+    </div>
 
     <!-- Main Content -->
     <main class="main">
@@ -95,8 +101,7 @@
                                     rel="noopener noreferrer">
                                     <i class="fab fa-linkedin"></i>
                                 </a>
-                                <a href="https://api.whatsapp.com/message/PGUJPWTWTHKVH1?autoload=1&app_absent=0" target="_blank" rel="noopener noreferrer"
-                                    class="whatsapp">
+                                <a href="javascript:void(0);" onclick="openWhatsApp()" class="whatsapp">
                                     <i class="fab fa-whatsapp"></i>
                                 </a>
                             </div>
@@ -252,82 +257,108 @@
             <div class="container">
                 <div class="section-title" data-aos="fade-up">
                     <h2>Teaching & Mentoring</h2>
-                    <p>Learn Cloud & Security with Me</p>
+                    <p>Learn Cybersecurity, Networking & Cloud with Me</p>
                 </div>
 
                 <div class="teaching-container">
+                    <!-- Cloud Computing Course -->
                     <div class="teaching-item" data-aos="fade-up">
-                        <div class="teaching-header">
-                            <div class="teaching-icon">
-                                <i class="fab fa-aws"></i>
-                            </div>
-                            <h3 class="teaching-title">AWS Masterclass</h3>
-                            <p class="teaching-subtitle">Comprehensive AWS Solutions Training</p>
-                        </div>
-                        <div class="teaching-content">
-                            <ul>
-                                <li><i class="fas fa-check-circle"></i> AWS Core Services (EC2, S3, RDS, VPC)</li>
-                                <li><i class="fas fa-check-circle"></i> Solution Architecture Best Practices</li>
-                                <li><i class="fas fa-check-circle"></i> Cloud Migration Strategies</li>
-                                <li><i class="fas fa-check-circle"></i> Cost Optimization Techniques</li>
-                                <li><i class="fas fa-check-circle"></i> High Availability & Scalability</li>
-                                <li><i class="fas fa-check-circle"></i> Hands-on Labs & Real-world Projects</li>
-                            </ul>
-                        </div>
-                        <div class="teaching-cta">
-                            <a href="https://wa.me/918445519227?text=Hi%20Nitin,%20I'm%20interested%20in%20your%20AWS%20Masterclass" class="btn">Enroll Now</a>
-                        </div>
-                    </div>
-                    
-                    <div class="teaching-item" data-aos="fade-up" data-aos-delay="200">
-                        <div class="teaching-header">
-                            <div class="teaching-icon">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <h3 class="teaching-title">Cloud Security</h3>
-                            <p class="teaching-subtitle">Protecting Cloud Infrastructure</p>
-                        </div>
-                        <div class="teaching-content">
-                            <ul>
-                                <li><i class="fas fa-check-circle"></i> IAM Policies & Best Practices</li>
-                                <li><i class="fas fa-check-circle"></i> Network Security & VPC Configuration</li>
-                                <li><i class="fas fa-check-circle"></i> Data Encryption & Key Management</li>
-                                <li><i class="fas fa-check-circle"></i> Security Compliance Frameworks</li>
-                                <li><i class="fas fa-check-circle"></i> Threat Detection & Incident Response</li>
-                                <li><i class="fas fa-check-circle"></i> Security Automation & Tooling</li>
-                            </ul>
-                        </div>
-                        <div class="teaching-cta">
-                            <a href="https://wa.me/918445519227?text=Hi%20Nitin,%20I'm%20interested%20in%20your%20Cloud%20Security%20course" class="btn">Enroll Now</a>
-                        </div>
-                    </div>
-                    
-                    <div class="teaching-item" data-aos="fade-up" data-aos-delay="400">
                         <div class="teaching-header">
                             <div class="teaching-icon">
                                 <i class="fas fa-cloud"></i>
                             </div>
-                            <h3 class="teaching-title">Cloud Career Accelerator</h3>
-                            <p class="teaching-subtitle">Job-ready Cloud Skills Program</p>
+                            <h3 class="teaching-title">Cloud Computing</h3>
+                            <p class="teaching-subtitle">Master Cloud Infrastructure</p>
                         </div>
                         <div class="teaching-content">
                             <ul>
-                                <li><i class="fas fa-check-circle"></i> Resume & Interview Preparation</li>
-                                <li><i class="fas fa-check-circle"></i> Certification Exam Strategies</li>
-                                <li><i class="fas fa-check-circle"></i> Real-world Project Portfolio Building</li>
-                                <li><i class="fas fa-check-circle"></i> Cloud Architecture Design Patterns</li>
-                                <li><i class="fas fa-check-circle"></i> DevOps & Infrastructure as Code (IaC)</li>
-                                <li><i class="fas fa-check-circle"></i> 1:1 Career Coaching & Mentoring</li>
+                                <li><i class="fas fa-check-circle"></i> AWS, Azure & GCP Core Services</li>
+                                <li><i class="fas fa-check-circle"></i> Cloud Architecture Best Practices</li>
+                                <li><i class="fas fa-check-circle"></i> Infrastructure as Code (IaC)</li>
+                                <li><i class="fas fa-check-circle"></i> Containerization with Docker & Kubernetes</li>
+                                <li><i class="fas fa-check-circle"></i> Serverless Computing Patterns</li>
+                                <li><i class="fas fa-check-circle"></i> Cost Optimization Strategies</li>
                             </ul>
                         </div>
                         <div class="teaching-cta">
-                            <a href="https://wa.me/918445519227?text=Hi%20Nitin,%20I'm%20interested%20in%20your%20Cloud%20Career%20Accelerator" class="btn">Enroll Now</a>
+                            <a href="javascript:void(0);" onclick="openWhatsAppForCourse('Cloud Computing')" class="btn">Enroll Now</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Ethical Hacking Course -->
+                    <div class="teaching-item" data-aos="fade-up" data-aos-delay="100">
+                        <div class="teaching-header">
+                            <div class="teaching-icon">
+                                <i class="fas fa-user-ninja"></i>
+                            </div>
+                            <h3 class="teaching-title">Ethical Hacking (CEH)</h3>
+                            <p class="teaching-subtitle">Master Penetration Testing</p>
+                        </div>
+                        <div class="teaching-content">
+                            <ul>
+                                <li><i class="fas fa-check-circle"></i> Vulnerability Assessment & Pen Testing</li>
+                                <li><i class="fas fa-check-circle"></i> Network Scanning & Exploitation</li>
+                                <li><i class="fas fa-check-circle"></i> Web Application Security Testing</li>
+                                <li><i class="fas fa-check-circle"></i> Social Engineering & Defense</li>
+                                <li><i class="fas fa-check-circle"></i> CEH Certification Preparation</li>
+                                <li><i class="fas fa-check-circle"></i> Real-world Attack Simulations</li>
+                            </ul>
+                        </div>
+                        <div class="teaching-cta">
+                            <a href="javascript:void(0);" onclick="openWhatsAppForCourse('Ethical Hacking (CEH)')" class="btn">Enroll Now</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Network Defense Course -->
+                    <div class="teaching-item" data-aos="fade-up" data-aos-delay="200">
+                        <div class="teaching-header">
+                            <div class="teaching-icon">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <h3 class="teaching-title">Network Defense (CND)</h3>
+                            <p class="teaching-subtitle">Advanced Threat Protection</p>
+                        </div>
+                        <div class="teaching-content">
+                            <ul>
+                                <li><i class="fas fa-check-circle"></i> Network Security Fundamentals</li>
+                                <li><i class="fas fa-check-circle"></i> Intrusion Detection & Prevention</li>
+                                <li><i class="fas fa-check-circle"></i> Threat Intelligence & Analysis</li>
+                                <li><i class="fas fa-check-circle"></i> Incident Response & Handling</li>
+                                <li><i class="fas fa-check-circle"></i> CND Certification Preparation</li>
+                                <li><i class="fas fa-check-circle"></i> Security Policy Development</li>
+                            </ul>
+                        </div>
+                        <div class="teaching-cta">
+                            <a href="javascript:void(0);" onclick="openWhatsAppForCourse('Network Defense (CND)')" class="btn">Enroll Now</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Firewall Configuration Course -->
+                    <div class="teaching-item" data-aos="fade-up" data-aos-delay="300">
+                        <div class="teaching-header">
+                            <div class="teaching-icon">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <h3 class="teaching-title">Firewall Configuration</h3>
+                            <p class="teaching-subtitle">Enterprise Security Implementation</p>
+                        </div>
+                        <div class="teaching-content">
+                            <ul>
+                                <li><i class="fas fa-check-circle"></i> Palo Alto Firewall Deployment</li>
+                                <li><i class="fas fa-check-circle"></i> Cisco ASA Configuration</li>
+                                <li><i class="fas fa-check-circle"></i> Fortinet Security Solutions</li>
+                                <li><i class="fas fa-check-circle"></i> VPN Setup & Management</li>
+                                <li><i class="fas fa-check-circle"></i> Security Policy Implementation</li>
+                                <li><i class="fas fa-check-circle"></i> Troubleshooting & Optimization</li>
+                            </ul>
+                        </div>
+                        <div class="teaching-cta">
+                            <a href="javascript:void(0);" onclick="openWhatsAppForCourse('Firewall Configuration')" class="btn">Enroll Now</a>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-
 
         <!-- Services Section -->
         <section id="services" class="services section">
@@ -338,56 +369,63 @@
                 </div>
 
                 <div class="services-container">
+                    <!-- Cybersecurity Consulting -->
                     <div class="service-item" data-aos="fade-up">
-                        <div class="icon">
-                            <i class="fas fa-cloud"></i>
-                        </div>
-                        <h4>Cloud Architecture</h4>
-                        <p>Designing and deploying secure, scalable cloud architectures leveraging AWS services
-                            including EC2, S3, VPC, and RDS.</p>
-                    </div>
-                    <div class="service-item" data-aos="fade-up" data-aos-delay="100">
                         <div class="icon">
                             <i class="fas fa-shield-alt"></i>
                         </div>
-                        <h4>Cloud Security</h4>
-                        <p>Developing and securing cloud data and applications with best practices in IAM, KMS, and
-                            Security Hub.</p>
+                        <h4>Cybersecurity Consulting</h4>
+                        <p>Offering expert guidance on securing digital assets, assessing threats, and implementing effective defense strategies tailored to your organization's needs.</p>
                     </div>
+                    
+                    <!-- Cloud Consulting -->
+                    <div class="service-item" data-aos="fade-up" data-aos-delay="100">
+                        <div class="icon">
+                            <i class="fas fa-cloud"></i>
+                        </div>
+                        <h4>Cloud Consulting</h4>
+                        <p>Helping businesses architect and manage scalable, secure cloud environments across AWS, GCP, and Azure with best practices in deployment and cost optimization.</p>
+                    </div>
+                    
+                    <!-- Networking -->
                     <div class="service-item" data-aos="fade-up" data-aos-delay="200">
-                        <div class="icon">
-                            <i class="fas fa-search"></i>
-                        </div>
-                        <h4>Security Assessments</h4>
-                        <p>Conducting cloud security assessments to identify risks and recommend mitigation strategies.
-                        </p>
-                    </div>
-                    <div class="service-item" data-aos="fade-up" data-aos-delay="300">
-                        <div class="icon">
-                            <i class="fas fa-chalkboard-teacher"></i>
-                        </div>
-                        <h4>Training & Workshops</h4>
-                        <p>Designing and delivering customized training sessions tailored to organizational needs and
-                            skill levels.</p>
-                    </div>
-                    <div class="service-item" data-aos="fade-up" data-aos-delay="400">
                         <div class="icon">
                             <i class="fas fa-network-wired"></i>
                         </div>
-                        <h4>VPC Design</h4>
-                        <p>Creating secure and efficient virtual private cloud architectures for enterprise
-                            applications.</p>
+                        <h4>Networking</h4>
+                        <p>Delivering strong foundational and practical networking solutions in routing, switching, and infrastructure management.</p>
                     </div>
+                    
+                    <!-- Ethical Hacking (CEH) -->
+                    <div class="service-item" data-aos="fade-up" data-aos-delay="300">
+                        <div class="icon">
+                            <i class="fas fa-user-ninja"></i>
+                        </div>
+                        <h4>Ethical Hacking (CEH)</h4>
+                        <p>Providing ethical hacking and penetration testing services using industry-recognized CEH practices to identify vulnerabilities and strengthen security posture.</p>
+                    </div>
+                    
+                    <!-- Firewall Configure -->
+                    <div class="service-item" data-aos="fade-up" data-aos-delay="400">
+                        <div class="icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h4>Firewall Configure</h4>
+                        <p>Professional configuration and management of enterprise firewall systems including Palo Alto, Cisco ASA, and Fortinet solutions.</p>
+                    </div>
+                    
+                    <!-- Certified Network Defender (CND) -->
                     <div class="service-item" data-aos="fade-up" data-aos-delay="500">
                         <div class="icon">
-                            <i class="fas fa-tachometer-alt"></i>
+                            <i class="fas fa-user-shield"></i>
                         </div>
-                        <h4>Cloud Monitoring</h4>
-                        <p>Implementing comprehensive monitoring solutions using CloudWatch for optimal performance.</p>
+                        <h4>Certified Network Defender (CND)</h4>
+                        <p>Providing certified network defense strategies, threat detection, and incident response planning.</p>
                     </div>
                 </div>
             </div>
         </section>
+
         <!-- Blog Section -->
         <div class="container">
             <section class="blog section">
@@ -405,8 +443,9 @@
                 </div>
             </section>
         </div>
+
         <!-- Contact Section -->
-        <section class="contact-section">
+        <section id="contact" class="contact-section">
             <div class="section-title">
                 <h2>Contact</h2>
                 <p>Get In Touch</p>
@@ -427,12 +466,10 @@
                     <i class="fab fa-whatsapp"></i>
                     <h3>WhatsApp Business:</h3>
                     <p>+91 8445519227</p>
-                    <a href="https://api.whatsapp.com/message/PGUJPWTWTHKVH1?autoload=1&app_absent=0"
-                        class="btn btn-whatsapp" target="_blank">
+                    <button onclick="openWhatsApp()" class="btn btn-whatsapp">
                         <i class="fab fa-whatsapp"></i> Message Me
-                    </a>
+                    </button>
                 </div>
-            </div>
             </div>
 
             <div class="contact-form">

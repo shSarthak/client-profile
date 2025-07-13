@@ -621,6 +621,7 @@
             background-color: #f8fafc;
             position: relative;
             overflow: hidden;
+            padding: 80px 0;
         }
         
         .teaching::before {
@@ -649,7 +650,7 @@
         
         .teaching-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
             position: relative;
             z-index: 2;
@@ -661,6 +662,8 @@
             overflow: hidden;
             box-shadow: var(--shadow);
             transition: var(--transition);
+            display: flex;
+            flex-direction: column;
         }
         
         .teaching-item:hover {
@@ -691,6 +694,7 @@
         
         .teaching-content {
             padding: 30px;
+            flex-grow: 1;
         }
         
         .teaching-content ul {
@@ -713,6 +717,7 @@
             color: var(--teaching-primary);
             margin-right: 10px;
             margin-top: 5px;
+            min-width: 20px;
         }
         
         .teaching-cta {
@@ -723,13 +728,25 @@
         
         .teaching-cta .btn {
             background: var(--teaching-primary);
-            border-color: var(--teaching-primary);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: var(--transition);
+            cursor: pointer;
+            width: 100%;
+            max-width: 200px;
         }
         
         .teaching-cta .btn:hover {
             background: var(--teaching-secondary);
-            border-color: var(--teaching-secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(74, 108, 247, 0.3);
         }
+
 
         .container {
             max-width: 1200px;
