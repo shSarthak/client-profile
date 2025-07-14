@@ -352,9 +352,9 @@ function handleContactForm() {
 
         // Send email using EmailJS
         // Replace these with your actual EmailJS credentials
-        const serviceID = 'service_ictdk2i'; // Replace with your EmailJS service ID
-        const templateID = 'template_p01lpyv'; // Replace with your EmailJS template ID
-        const publicKey = 'YeZcvTbZBMd7U-mq8'; // Replace with your EmailJS public key
+        const serviceID = 'service_cev6if5'; // Replace with your EmailJS service ID
+        const templateID = 'template_ygeakuk'; // Replace with your EmailJS template ID
+        const publicKey = 'PrXglDKKoVCdWEOyA'; // Replace with your EmailJS public key
 
         // Template parameters that will be sent to EmailJS
         const templateParams = {
