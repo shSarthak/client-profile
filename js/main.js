@@ -457,7 +457,7 @@ function loadAllBlogPosts() {
         `;
 
         // Scroll to top of blog section
-        blogContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // blogContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
     // Main loading function
